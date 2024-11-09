@@ -87,3 +87,185 @@
     }
   });
 </script>
+<!-- Botón flotante para abrir el chatbot -->
+<button onclick="toggleChat()" class="chatbot-toggle-btn">🗨️</button>
+
+<!-- Contenedor del Chatbot -->
+<div class="chatbot-container" id="chatbot-container">
+    <!-- Cabecera del Chatbot -->
+    <div class="chatbot-header">
+        <span>Chat con nosotros</span>
+        <button class="chatbot-close-btn" onclick="toggleChat()">❌</button>
+    </div>
+
+    <!-- Mensajes del Chat -->
+    <div class="chatbot-box" id="chatbot-box"></div>
+
+    <!-- Entrada de mensaje -->
+    <div class="chatbot-input-container">
+        <input type="text" id="chatbot-input" class="chatbot-input" placeholder="Escribe tu mensaje..." onkeypress="handleKeyPress(event)">
+        <button onclick="sendMessage()" class="chatbot-send-btn">Enviar</button>
+    </div>
+</div>
+
+<script>
+    // Función para alternar la visibilidad del chat
+    function toggleChat() {
+        const chatbot = document.getElementById('chatbot-container');
+        chatbot.style.display = (chatbot.style.display === 'none' || chatbot.style.display === '') ? 'block' : 'none';
+    }
+
+    // Función para manejar la interacción del chatbot
+    function getRespuestaChatbot(mensaje) {
+        mensaje = mensaje.toLowerCase();
+
+        if (mensaje.includes('hola')) {
+            return "¡Hola! ¿Cómo estás?";
+        } else if (mensaje.includes('bien')) {
+            return "Me alegra saber que estás bien 😊. ¿En qué te puedo ayudar?";
+        } else if (mensaje.includes('ayuda')) {
+            return "Claro, dime en qué te puedo ayudar. Tengo las siguientes opciones:\n1. Contactar a soporte\n2. Brindarte una guía\n3. Darte a conocer el producto. Escribe 'soporte', 'guía' o 'producto' para elegir.";
+        } else if (mensaje.includes('guia') || mensaje.includes('guía')) {
+            return "Claro, bienvenido a **INVENTARTE**. Somos un sistema de gestión de inventarios por medio del cual tú como usuario podrás ingresar cantidades de ingreso o salida de todos nuestros excelentes productos. Adicionalmente, si tienes alguna otra duda no dudes en contactarte con soporte. ¡Saludos y bienvenido!";
+        } else if (mensaje.includes('soporte')) {
+            return `Para contactar a soporte, haz clic en el siguiente enlace para enviarnos un mensaje directo en WhatsApp: <a href="https://wa.me/50558136366" target="_blank">Enviar mensaje a soporte</a>`;
+        } else if (mensaje.includes('producto')) {
+            return "Muy bien, en el apartado de los productos disponibles a tu izquierda tienes las opciones disponibles, las cuales son el inicio para conocer nuestros valores, además de opciones para el ingreso y consulta de datos. Te invito a echarles un ojo. Si necesitas ayuda más personalizada, no dudes en buscar la opción de soporte.";
+        } else if (mensaje.includes('adios') || mensaje.includes('hasta luego') || mensaje.includes('bye') || mensaje.includes('nos vemos') || mensaje.includes('gracias')) {
+            setTimeout(() => {
+                toggleChat();
+            }, 2000); // Cierra el chat después de 2 segundos
+            return "¡Gracias por contactarte! 😊 Fue un placer ayudarte. ¡Hasta luego y que tengas un excelente día! 👋";
+        } else {
+            return "Lo siento, no entiendo la pregunta. ¿Puedes reformularla o elegir una opción válida?";
+        }
+    }
+
+    // Función para enviar el mensaje y mostrar la respuesta
+    function sendMessage() {
+        const input = document.getElementById('chatbot-input');
+        const mensajeUsuario = input.value.trim();
+
+        if (mensajeUsuario) {
+            const chatBox = document.getElementById('chatbot-box');
+            chatBox.innerHTML += "<p class='chatbot-user'>Tú: " + mensajeUsuario + "</p>";
+
+            const respuestaBot = getRespuestaChatbot(mensajeUsuario);
+            chatBox.innerHTML += "<p class='chatbot-bot'>Chatbot: " + respuestaBot + "</p>";
+
+            input.value = '';
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+    }
+
+    // Función para enviar mensaje con Enter
+    function handleKeyPress(event) {
+        if (event.key === 'Enter') {
+            sendMessage();
+        }
+    }
+</script>
+
+<style>
+    .chatbot-container {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 320px;
+        height: 450px;
+        background-color: #ffffff;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        border-radius: 10px;
+        display: none;
+        z-index: 9999;
+        overflow: hidden;
+        font-family: 'Roboto', sans-serif;
+        animation: fadeIn 0.3s ease;
+    }
+
+    .chatbot-header {
+        background-color: #007BFF;
+        color: white;
+        padding: 12px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    .chatbot-box {
+        height: 300px;
+        padding: 15px;
+        overflow-y: auto;
+        background-color: #f9f9f9;
+        color: #333;
+        font-size: 16px;
+        line-height: 1.6;
+    }
+
+    .chatbot-user {
+        font-weight: bold;
+        color: #007BFF;
+        margin-bottom: 10px;
+    }
+
+    .chatbot-bot {
+        background-color: #e6e6e6;
+        padding: 10px;
+        border-radius: 5px;
+        margin-top: 5px;
+    }
+
+    .chatbot-input-container {
+        display: flex;
+        padding: 10px;
+        background-color: #f1f1f1;
+    }
+
+    .chatbot-input {
+        padding: 10px;
+        width: 80%;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 16px;
+    }
+
+    .chatbot-send-btn {
+        width: 18%;
+        padding: 10px;
+        background-color: #007BFF;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+
+    .chatbot-send-btn:hover {
+        background-color: #0056b3;
+    }
+
+    .chatbot-toggle-btn {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background-color: #007BFF;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        padding: 15px;
+        font-size: 22px;
+        cursor: pointer;
+        z-index: 9999;
+    }
+
+    .chatbot-toggle-btn:hover {
+        background-color: #0056b3;
+    }
+
+    @keyframes fadeIn {
+        0% { opacity: 0; transform: translateY(20px); }
+        100% { opacity: 1; transform: translateY(0); }
+    }
+</style>
